@@ -35,6 +35,11 @@ body {
   line-height: 1.5;
   color: var(--color-texto);
   background: var(--color-fondo);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
