@@ -24,7 +24,7 @@ export default function Login() {
 
   return (
     <div className="login">
-      <h1 className="login-titulo">MyFletes</h1>
+      <h1 className="login-titulo">Bienvenido</h1>
 
       <form className="formulario" onSubmit={handleSubmit}>
         <input
