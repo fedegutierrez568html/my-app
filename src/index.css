@@ -1,0 +1,65 @@
+:root {
+  color-scheme: dark;
+
+  --color-fondo: #161616;
+  --color-superficie: #1c1c1c;
+  --color-texto: #f5f5f5;
+  --color-texto-suave: #8a8a8a;
+  --color-borde: #333333;
+
+  --color-acento: #2f9e44;
+  --color-acento-brillo: rgba(47, 158, 68, 0.35);
+  --color-brillo-blanco: rgba(255, 255, 255, 0.25);
+  --color-peligro: #ef6b6b;
+
+  --espacio-1: 0.5rem;
+  --espacio-2: 1rem;
+  --espacio-3: 1.5rem;
+  --espacio-4: 2rem;
+
+  --radio: 1.25rem;
+  --radio-chico: 0.75rem;
+  --fuente: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+}
+
+#root {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--espacio-2);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--espacio-2);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
