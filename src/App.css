@@ -1,6 +1,31 @@
+/* ========== BASE ========== */
+
 .contenido {
   padding-bottom: 6rem;
 }
+
+/* ========== EFECTO VIDRIO (compartido) ========== */
+
+.barra-navegacion,
+.tarjeta-mes,
+.boton-accion,
+.formulario,
+.tarjeta-cifra,
+.tarjeta-grafico,
+.tarjeta {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.03)
+  );
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1.75rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ========== BARRA DE NAVEGACIÓN ========== */
 
 .barra-navegacion {
   position: fixed;
@@ -28,6 +53,93 @@
 .tab-activa {
   color: var(--color-texto);
 }
+
+/* ========== BOTONES ========== */
+
+.boton-icono {
+  display: flex;
+  padding: var(--espacio-1);
+  color: var(--color-texto);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.boton-peligro {
+  color: var(--color-peligro);
+}
+
+.boton-principal,
+.boton-secundario {
+  min-height: 3rem;
+  padding: 0 var(--espacio-3);
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  border-radius: var(--radio-chico);
+  cursor: pointer;
+}
+
+.boton-principal {
+  border: 1px solid var(--color-acento);
+  box-shadow: 0 0 12px var(--color-acento-brillo);
+}
+
+.boton-secundario {
+  border: 1px solid var(--color-borde);
+}
+
+.boton-principal:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ========== TEXTOS COMUNES ========== */
+
+.vacio {
+  padding: var(--espacio-4) 0;
+  text-align: center;
+  color: var(--color-texto-suave);
+}
+
+.mensaje-error {
+  margin: 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-peligro);
+}
+
+/* ========== FORMULARIOS ========== */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  padding: var(--espacio-3);
+}
+
+.formulario input,
+.formulario select {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 var(--espacio-2);
+  color: var(--color-texto);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1rem;
+}
+
+.formulario input::placeholder {
+  color: var(--color-texto-suave);
+}
+
+.formulario input:focus,
+.formulario select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========== INICIO ========== */
+
 .inicio {
   display: flex;
   flex-direction: column;
@@ -39,15 +151,6 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: var(--espacio-3);
-}
-
-.boton-icono {
-  display: flex;
-  padding: var(--espacio-1);
-  color: var(--color-texto);
-  background: none;
-  border: none;
-  cursor: pointer;
 }
 
 .tarjeta-mes {
@@ -78,12 +181,6 @@
   font-weight: 400;
   color: var(--color-texto-suave);
   border-bottom: 1px solid var(--color-borde);
-}
-
-.vacio {
-  padding: var(--espacio-4) 0;
-  text-align: center;
-  color: var(--color-texto-suave);
 }
 
 .lista-trabajos {
@@ -132,52 +229,7 @@
   cursor: pointer;
 }
 
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: var(--espacio-2);
-  padding: var(--espacio-3);
-  background: var(--color-superficie);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radio);
-}
-
-.formulario input,
-.formulario select {
-  width: 100%;
-  min-height: 3rem;
-  padding: 0 var(--espacio-2);
-  color: var(--color-texto);
-  background: var(--color-fondo);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radio-chico);
-}
-
-.formulario input:focus,
-.formulario select:focus {
-  outline: none;
-  border-color: var(--color-acento);
-  box-shadow: 0 0 8px var(--color-acento-brillo);
-}
-
-.boton-principal,
-.boton-secundario {
-  min-height: 3rem;
-  padding: 0 var(--espacio-3);
-  color: var(--color-texto);
-  background: var(--color-superficie);
-  border-radius: var(--radio-chico);
-  cursor: pointer;
-}
-
-.boton-principal {
-  border: 1px solid var(--color-acento);
-  box-shadow: 0 0 12px var(--color-acento-brillo);
-}
-
-.boton-secundario {
-  border: 1px solid var(--color-borde);
-}
+/* ========== INGRESOS, HISTORIAL Y AGENDA ========== */
 
 .total-ingresos {
   display: flex;
@@ -233,27 +285,6 @@
   margin-top: var(--espacio-1);
 }
 
-.boton-peligro {
-  color: var(--color-peligro);
-}
-.barra-navegacion,
-.tarjeta-mes,
-.boton-accion,
-.formulario,
-.tarjeta-cifra,
-.tarjeta-grafico,
-.tarjeta {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.03)
-  );
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  backdrop-filter: blur(14px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 1.75rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
 .historial-cabecera {
   display: flex;
   align-items: center;
@@ -264,6 +295,7 @@
 .historial-cabecera h2 {
   margin: 0;
 }
+
 .filtros {
   display: flex;
   gap: var(--espacio-1);
@@ -295,6 +327,8 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 0.75rem;
 }
+
+/* ========== RESUMEN ========== */
 
 .resumen-cabecera {
   display: flex;
@@ -375,7 +409,7 @@
   outline: none;
 }
 
-/* LOGIN */
+/* ========== LOGIN ========== */
 
 .login {
   min-height: calc(100dvh - 2rem);
@@ -390,9 +424,223 @@
   font-size: 2rem;
 }
 
-.mensaje-error {
-  margin: 0;
-  text-align: center;
-  font-size: 0.875rem;
-  color: var(--color-peligro);
+.titulo-escrito {
+  position: relative;
+}
+
+.titulo-escrito::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 2px;
+  background: currentColor;
+  animation: parpadeo 1s steps(1) infinite;
+}
+
+.titulo-pendiente {
+  visibility: hidden;
+}
+
+@keyframes parpadeo {
+  50% {
+    opacity: 0;
+  }
+}
+
+.login-tarjeta {
+  width: 100%;
+  max-width: 24rem;
+  margin: 0 auto;
+}
+
+.campo {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: 0 var(--espacio-2);
+  color: var(--color-texto-suave);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1rem;
+}
+
+.campo:focus-within {
+  color: var(--color-texto);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.formulario.login-tarjeta .campo input,
+.formulario.login-tarjeta .campo input:focus {
+  flex: 1;
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+}
+
+.campo .boton-icono {
+  padding: 0;
+  color: inherit;
+}
+
+.login-tarjeta .boton-principal {
+  background: rgba(47, 158, 68, 0.18);
+  border-color: rgba(47, 158, 68, 0.75);
+  box-shadow: 0 0 14px var(--color-acento-brillo);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-texto);
+  caret-color: var(--color-texto);
+  -webkit-box-shadow: 0 0 0 1000px #1a1a1a inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+input::-ms-reveal {
+  display: none;
+}
+/* ========== ANIMACIONES ========== */
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fundido {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Al cambiar de pantalla: la pantalla entera aparece con un fundido */
+.contenido > * {
+  animation: fundido 0.25s ease-out backwards;
+}
+
+/* Tarjetas, filas y bloques: entran deslizándose hacia arriba */
+.inicio > *,
+.cifras > *,
+.tarjeta-grafico,
+:is(.lista-tarjetas, .lista-trabajos, .lista-meses) > li {
+  animation: aparecer 0.45s ease-out backwards;
+  animation-delay: calc(var(--n, 0) * 60ms);
+}
+
+/* Retraso escalonado: cada elemento espera un poco más que el anterior */
+:is(.inicio, .cifras, .lista-tarjetas, .lista-trabajos, .lista-meses)
+  > :nth-child(2) {
+  --n: 1;
+}
+:is(.inicio, .cifras, .lista-tarjetas, .lista-trabajos, .lista-meses)
+  > :nth-child(3) {
+  --n: 2;
+}
+:is(.inicio, .cifras, .lista-tarjetas, .lista-trabajos, .lista-meses)
+  > :nth-child(4) {
+  --n: 3;
+}
+:is(.inicio, .cifras, .lista-tarjetas, .lista-trabajos, .lista-meses)
+  > :nth-child(5) {
+  --n: 4;
+}
+:is(.inicio, .cifras, .lista-tarjetas, .lista-trabajos, .lista-meses)
+  > :nth-child(6) {
+  --n: 5;
+}
+:is(.inicio, .cifras, .lista-tarjetas, .lista-trabajos, .lista-meses)
+  > :nth-child(7) {
+  --n: 6;
+}
+:is(.inicio, .cifras, .lista-tarjetas, .lista-trabajos, .lista-meses)
+  > :nth-child(8) {
+  --n: 7;
+}
+:is(.inicio, .cifras, .lista-tarjetas, .lista-trabajos, .lista-meses)
+  > :nth-child(n + 9) {
+  --n: 8;
+}
+
+/* Login: la tarjeta aparece un instante después de que empieza el título */
+.login-tarjeta {
+  animation: aparecer 0.6s ease-out 0.2s backwards;
+}
+
+/* Si la persona tiene activada la opción de reducir movimiento, sin animaciones */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+/* ========== RESPUESTA AL TOQUE ========== */
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.tarjeta-mes,
+.boton-accion,
+.boton-principal,
+.boton-secundario,
+.filtro,
+.boton-icono,
+.tab {
+  transition:
+    transform 0.15s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+.tarjeta-mes:active {
+  transform: scale(0.98);
+}
+
+.boton-accion:active,
+.boton-principal:not(:disabled):active,
+.boton-secundario:active,
+.filtro:active {
+  transform: scale(0.96);
+}
+
+.boton-icono:active,
+.tab:active {
+  transform: scale(0.88);
+}
+
+/* Solo en dispositivos con mouse: un leve realce al pasar el cursor */
+@media (hover: hover) {
+  .tarjeta-mes:hover,
+  .boton-accion:hover,
+  .boton-secundario:hover,
+  .filtro:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .boton-principal:not(:disabled):hover {
+    box-shadow: 0 0 18px var(--color-acento-brillo);
+  }
+
+  .tab:hover {
+    color: var(--color-texto);
+  }
 }
