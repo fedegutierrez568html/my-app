@@ -24,8 +24,6 @@ export default function Login() {
 
   return (
     <div className="login">
-      <h1 className="login-titulo"></h1>
-
       <form className="formulario" onSubmit={handleSubmit}>
         <input
           type="email"
