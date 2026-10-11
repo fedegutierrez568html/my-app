@@ -48,7 +48,7 @@ function App() {
         {pantalla === "historial" && (
           <Historial volver={() => setPantalla("inicio")} />
         )}
-        {pantalla === "agenda" && <AgendaLista />}
+        {pantalla === "agenda" && <AgendaLista irA={setPantalla} />}
         {pantalla === "nuevoFlete" && (
           <NuevoFlete
             volver={() => setPantalla("inicio")}

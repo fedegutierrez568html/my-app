@@ -13,8 +13,15 @@ function BarraNavegacion({ pantalla, cambiarPantalla }) {
     ? "inicio"
     : pantalla;
 
+  // Posición de la pastilla de vidrio que se desliza bajo el ícono activo
+  const indice = OPCIONES.findIndex((opcion) => opcion.id === activa);
+
   return (
     <nav className="barra-navegacion">
+      <span
+        className="pastilla"
+        style={{ transform: `translateX(${indice * 100}%)` }}
+      />
       {OPCIONES.map(({ id, texto, Icono }) => (
         <button
           key={id}

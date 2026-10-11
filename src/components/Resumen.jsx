@@ -1,38 +1,47 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
-const NOMBRES_MESES = [
-  "Ene",
-  "Feb",
-  "Mar",
-  "May",
-  "Jun",
-  "Jul",
-  "Ago",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dic",
+const MESES = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
 ];
 
+// Un color por mes (siempre el mismo mes, el mismo color)
 const COLORES = [
-  "#4cff91",
-  "#c4a7e7",
-  "#f6c177",
-  "#eb6f92",
-  "#ebbcba",
-  "#31748f",
-  "#a6a5d6",
-  "#8ab4f8",
-  "#e0af68",
-  "#bb9af7",
-  "#7dcfff",
-  "#f7768e",
+  "#34d27b",
+  "#2bc4c0",
+  "#4b8cff",
+  "#9a7bff",
+  "#ff7ab6",
+  "#ffb54a",
+  "#8de069",
+  "#5ad1f0",
+  "#7c8cff",
+  "#d08bff",
+  "#ffd166",
+  "#6ee7b7",
 ];
+
+// Medidas del gráfico circular
+const RADIO = 76;
+const CIRCUNFERENCIA = 2 * Math.PI * RADIO;
+
+function formatoPlata(numero) {
+  return "$" + Math.round(numero).toLocaleString("es-UY");
+}
 
 function Resumen() {
-  const [Ingresos, setIngresos] = useState([]);
+  const [ingresos, setIngresos] = useState([]);
   const [anio, setAnio] = useState(new Date().getFullYear());
   const [error, setError] = useState("");
 
@@ -56,32 +65,54 @@ function Resumen() {
   const aniosDisponibles = [
     ...new Set([
       new Date().getFullYear(),
-      ...Ingresos.map((ingreso) => Number(ingreso.fecha.slice(0, 4))),
+      ...ingresos.map((ingreso) => Number(ingreso.fecha.slice(0, 4))),
     ]),
   ].sort((a, b) => b - a);
 
   // Quedarse solo con los ingresos del año elegido
   // (fecha viene como texto "2026-10-09", los 4 primeros caracteres son el año)
-  const delAnio = Ingresos.filter(
+  const delAnio = ingresos.filter(
     (ingreso) => Number(ingreso.fecha.slice(0, 4)) === anio,
   );
 
-  // Armar una lista de 12 meses, cada uno con su total
-  const datosPorMes = NOMBRES_MESES.map((nombre, indice) => {
-    const total = delAnio
+  // Total de cada uno de los 12 meses (posición 0 = enero, 11 = diciembre)
+  const totalesPorMes = MESES.map((_nombre, indice) =>
+    delAnio
       // los caracteres 5 y 6 son el mes ("10" = octubre)
       .filter((ingreso) => Number(ingreso.fecha.slice(5, 7)) === indice + 1)
-      .reduce((suma, ingreso) => suma + Number(ingreso.monto), 0);
+      .reduce((suma, ingreso) => suma + Number(ingreso.monto), 0),
+  );
 
-    return { mes: nombre, total: total };
+  const totalAnio = totalesPorMes.reduce((suma, total) => suma + total, 0);
+  const mesesConIngresos = totalesPorMes.filter((total) => total > 0).length;
+  const promedio = mesesConIngresos > 0 ? totalAnio / mesesConIngresos : 0;
+
+  // Mes con más ingresos
+  let mejorMes = 0;
+  totalesPorMes.forEach((total, indice) => {
+    if (total > totalesPorMes[mejorMes]) mejorMes = indice;
   });
-
-  const totalAnio = datosPorMes.reduce((suma, mes) => suma + mes.total, 0);
-  const mesesConIngresos = datosPorMes.filter((mes) => mes.total > 0);
 
   // Total del mes actual (solo tiene sentido si estamos mirando este año)
   const esEsteAnio = anio === new Date().getFullYear();
-  const totalMesActual = datosPorMes[new Date().getMonth()].total;
+  const totalMesActual = totalesPorMes[new Date().getMonth()];
+
+  // Cada mes con ingresos es un tramo del círculo
+  let recorrido = 0;
+  const tramos = [];
+  totalesPorMes.forEach((total, indice) => {
+    if (total === 0) return;
+    const largo = (total / totalAnio) * CIRCUNFERENCIA;
+    const visible = Math.max(largo - 3, 0.5); // 3 de separación entre tramos
+    tramos.push({ indice, visible, inicio: recorrido });
+    recorrido += largo;
+  });
+
+  // Lista de meses: del más reciente al más viejo
+  const filas = totalesPorMes
+    .map((total, indice) => ({ total, indice }))
+    .filter((fila) => fila.total > 0)
+    .reverse();
 
   return (
     <div>
@@ -102,75 +133,112 @@ function Resumen() {
 
       {error && <p>Error: {error}</p>}
 
-      <div className="cifras">
-        <div className="tarjeta-cifra">
-          <div className="tarjeta-cifra-titulo">Total {anio}</div>
-          <div className="tarjeta-cifra-monto">
-            ${totalAnio.toLocaleString("es-UY")}
-          </div>
-        </div>
-        {esEsteAnio && (
-          <div className="tarjeta-cifra">
-            <div className="tarjeta-cifra-titulo">Este mes</div>
-            <div className="tarjeta-cifra-monto">
-              ${totalMesActual.toLocaleString("es-UY")}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {mesesConIngresos.length === 0 ? (
+      {totalAnio === 0 ? (
         <p className="vacio">No hay ingresos cargados en {anio}.</p>
       ) : (
         <>
           <div className="tarjeta-grafico">
-            <ResponsiveContainer width="100%" height={240}>
-              <PieChart>
-                <Pie
-                  data={mesesConIngresos}
-                  dataKey="total"
-                  nameKey="mes"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={2}
-                  stroke="none"
-                >
-                  {mesesConIngresos.map((mes, indice) => (
-                    <Cell
-                      key={mes.mes}
-                      fill={COLORES[indice % COLORES.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    background: "#1c1c1c",
-                    border: "1px solid rgba(255, 255, 255, 0.18)",
-                    borderRadius: "0.75rem",
-                  }}
-                  itemStyle={{ color: "#f5f5f5" }}
-                  formatter={(valor) => `$${valor.toLocaleString("es-UY")}`}
+            <div className="donut-caja">
+              <svg
+                className="donut"
+                viewBox="0 0 200 200"
+                role="img"
+                aria-label={`Ingresos por mes de ${anio}`}
+              >
+                <circle
+                  cx="100"
+                  cy="100"
+                  r={RADIO}
+                  fill="none"
+                  stroke="rgba(255, 255, 255, 0.07)"
+                  strokeWidth="20"
                 />
-              </PieChart>
-            </ResponsiveContainer>
+                {tramos.map((tramo) => (
+                  <circle
+                    key={tramo.indice}
+                    cx="100"
+                    cy="100"
+                    r={RADIO}
+                    fill="none"
+                    stroke={COLORES[tramo.indice]}
+                    strokeWidth="20"
+                    strokeDasharray={`${tramo.visible.toFixed(2)} ${(CIRCUNFERENCIA - tramo.visible).toFixed(2)}`}
+                    strokeDashoffset={(-tramo.inicio).toFixed(2)}
+                    transform="rotate(-90 100 100)"
+                  />
+                ))}
+              </svg>
+              <div className="donut-centro">
+                <small>{anio}</small>
+                <b>{formatoPlata(totalAnio)}</b>
+              </div>
+            </div>
           </div>
 
-          <ul className="lista-meses">
-            {mesesConIngresos.map((mes, indice) => (
-              <li key={mes.mes} className="fila-mes">
-                <span
-                  className="punto-mes"
-                  style={{ background: COLORES[indice % COLORES.length] }}
-                ></span>
-                <span className="fila-mes-nombre">{mes.mes}</span>
-                <span className="fila-mes-porcentaje">
-                  {Math.round((mes.total / totalAnio) * 100)}%
-                </span>
-                <span className="fila-mes-monto">
-                  ${mes.total.toLocaleString("es-UY")}
-                </span>
-              </li>
-            ))}
+          <div className="cifras">
+            {esEsteAnio && (
+              <div className="tarjeta-cifra">
+                <div className="tarjeta-cifra-titulo">Este mes</div>
+                <div className="tarjeta-cifra-monto">
+                  {formatoPlata(totalMesActual)}
+                </div>
+              </div>
+            )}
+            <div className="tarjeta-cifra">
+              <div className="tarjeta-cifra-titulo">Promedio por mes</div>
+              <div className="tarjeta-cifra-monto">
+                {formatoPlata(promedio)}
+              </div>
+            </div>
+            <div className="tarjeta-cifra">
+              <div className="tarjeta-cifra-titulo">Ingresos registrados</div>
+              <div className="tarjeta-cifra-monto">{delAnio.length}</div>
+            </div>
+            <div className="tarjeta-cifra">
+              <div className="tarjeta-cifra-titulo">Mejor mes</div>
+              <div className="tarjeta-cifra-monto">
+                {formatoPlata(totalesPorMes[mejorMes])}{" "}
+                <small>{MESES[mejorMes]}</small>
+              </div>
+            </div>
+          </div>
+
+          <div className="seccion-fila">
+            <h3 className="seccion-titulo">Por mes</h3>
+          </div>
+
+          <ul className="lista-meses tarjeta">
+            {filas.map((fila) => {
+              const porcentaje = Math.round((fila.total / totalAnio) * 100);
+              return (
+                <li key={fila.indice} className="fila-mes">
+                  <span
+                    className="punto-mes"
+                    style={{ background: COLORES[fila.indice] }}
+                  ></span>
+                  <div>
+                    <span className="fila-mes-nombre">
+                      {MESES[fila.indice]}
+                    </span>
+                    <div className="fila-mes-barra">
+                      <span
+                        className="fila-mes-relleno"
+                        style={{
+                          width: `${porcentaje}%`,
+                          background: COLORES[fila.indice],
+                        }}
+                      ></span>
+                    </div>
+                  </div>
+                  <div className="fila-mes-derecha">
+                    <span className="fila-mes-monto">
+                      {formatoPlata(fila.total)}
+                    </span>
+                    <span className="fila-mes-porcentaje">{porcentaje}%</span>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </>
       )}
